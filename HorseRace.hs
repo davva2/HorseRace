@@ -3,7 +3,7 @@ Horse race card game
 Anton Eklund, Axel Nygårds, David Smeds
 
 -}
-import System.Random
+--import System.Random
 import Data.Array.IO
 import Control.Monad
 import Prelude hiding(catch)
@@ -67,16 +67,32 @@ shuffle d = do
 
 {-	createPlayers ui
 	POST: A list with all players playing 
-
 -}
-createPlayers :: String(user input??) -> [Player]
-createPlayers = undefined
+-}
+createPlayers :: IO [Player]
+{-
+examples: createPlayers
+How many players?
+3
+Player 1, please input your name
+Alex
+Player 2, please input your name
+Berra
+Player 3, please input your name
+Carro
+[("Alex",0,None),("Berra",0,None),("Carro",0,None)]
+--}
+createPlayers = do 
+ putStrLn "How many players?"
+ number <- getLine
+ players <- forM [1..(read number :: Int)] (\p -> do
+  putStrLn ("Player " ++ (show p) ++ ", please input your name")
+  player <- getLine
+  return player)
+ return (inputPlayerNames players [])
 
-How many players? 1-8
-Input 
-Player 1 name = 
-Player 2 name = etc
-
+inputPlayerNames [] ls = ls
+inputPlayerNames (x:xs) ls = inputPlayerNames xs (ls ++ [(x,0,None)])
 
 {-	placeBets p
 	POST: List modified so Player now has a number and a suit which represents the bet.
