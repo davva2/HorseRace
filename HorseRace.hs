@@ -3,6 +3,11 @@ Horse race card game
 Anton Eklund, Axel Nygårds, David Smeds
 
 -}
+import System.Random
+import Data.Array.IO
+import Control.Monad
+import Prelude hiding(catch)
+import Control.Exception
 
 data Suit = None | Spade | Heart | Clove | Diamond 
 	deriving(Show,Eq)
@@ -31,15 +36,34 @@ createDeckAux (x:xs) [] v r | x == Heart = createDeckAux xs v v r
 createDeckAux (x:xs) (l:ls) v r | x == Heart = createDeckAux (x:xs) ls v ((x,l):r)
 createDeckAux (x:xs) [] v r | x == Spade = r
 createDeckAux (x:xs) (l:ls) v r | x == Spade = createDeckAux (x:xs) ls v ((x,l):r)
+{- 
+createDeck :: [Card]
+createDeck = (addValue Spade) ++ (addValue Heart) ++ (addValue Club) ++ (addValue Diamond)
+
+addValue :: Suit -> [Card]
+addValue s = [(s,King)] ++ [(s,Queen)] ++ [(s,Knight)] ++ [(s,Ten)] ++ [(s,Nine)] ++ [(s,Eight)] ++ 
+		[(s,Seven)] ++ [(s,Six)] ++ [(s,Five)] ++ [(s,Four)] ++ [(s,Three)] ++ [(s,Two)]
+-}
 {--
 
 
 {-	shuffle d
 	POST: List of cards where the position of the cards has been randomized. 
-
+	COMMENT: copied from https://wiki.haskell.org/Random_shuffle
 -}
-shuffle :: [Card] -> [Card]
-shuffle = undefined
+shuffle :: [a] -> IO [a]
+shuffle d = do
+        ar <- newArray n d
+        forM [1..n] $ \i -> do
+            j <- randomRIO (i,n)
+            vi <- readArray ar i
+            vj <- readArray ar j
+            writeArray ar j vi
+            return vj
+  where
+    n = length d
+    newArray :: Int -> [a] -> IO (IOArray Int a)
+    newArray n d =  newListArray (1,n) d
 
 {-	createPlayers ui
 	POST: A list with all players playing 
@@ -58,8 +82,25 @@ Player 2 name = etc
 	POST: List modified so Player now has a number and a suit which represents the bet.
 
 -}
+
 placeBets :: [Player] -> [Player]
-placeBets = undefined
+placeBets pl = placeBets' pl []
+	where 
+		placeBets' [] save = save
+		placeBets' ((p,b,s):pl) save = placeBets pl (s ++ [(p,readBet,Spade)])
+
+
+readBet :: IO Int
+readBet = do
+  catch (do
+    line <- getLine 
+    evaluate (read line))  -- evaluate required to force conversion of line to Move
+    ((\_ -> do   -- exception handler
+       putStrLn "Invalid input. Correct format: amount"
+       readBet) :: SomeException -> IO Int)
+
+readSuit :: IO String
+readSuit = undefined
 
 {-	createBoard d 
 	POST: 7 face down cards on the side and all aces represents the different suits
