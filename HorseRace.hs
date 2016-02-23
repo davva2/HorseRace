@@ -66,7 +66,58 @@ placeBets = undefined
 
 -}
 createBoard :: [Card] -> String/Graphics -- här väljer vi om vi ska köra i konsolen eller om vi ska ha ngt grafiskt
-createBoard = undefined
+createBoard q w e r = do
+	putStrLn "_______"
+	putStrLn (line1 q)
+	putStrLn (line2 w)
+	putStrLn (line3 e)
+	putStrLn (line4 r)
+	putStrLn "│???????"
+	putStrLn "_______"
+
+line1 q 
+	| q==0 = "│H"
+	| q==1 = "│ H"
+	| q==2 = "│  H"
+	| q==3 = "│   H"
+	| q==4 = "│    H"
+	| q==5 = "│     H"
+	| q==6 = "│      H"
+	| q==7 = "│       H"
+	| otherwise = "|H"
+
+line2 w 
+	| w==0 = "│D"
+	| w==1 = "│ D"
+	| w==2 = "│  D"
+	| w==3 = "│   D"
+	| w==4 = "│    D"
+	| w==5 = "│     D"
+	| w==6 = "│      D"
+	| w==7 = "│       D"
+	| otherwise = "|D"
+
+line3 e 
+	| e==0 = "│S"
+	| e==1 = "│ S"
+	| e==2 = "│  S"
+	| e==3 = "│   S"
+	| e==4 = "│    S"
+	| e==5 = "│     S"
+	| e==6 = "│      S"
+	| e==7 = "│       S"
+	| otherwise = "|S"
+
+line4 r 
+	| r==0 = "│C"
+	| r==1 = "│ C"
+	| r==2 = "│  C"
+	| r==3 = "│   C"
+	| r==4 = "│    C"
+	| r==5 = "│     C"
+	| r==6 = "│      C"
+	| r==7 = "│       C"
+	| otherwise = "|C"
 
 {-	printWinners players suit
 	PURPOSE: Checks which players that betted on the right suit and prints them as winners.
