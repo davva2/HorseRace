@@ -123,15 +123,24 @@ line4 r
 	PURPOSE: Checks which players that betted on the right suit and prints them as winners.
 	POST: Prints the winners as string in console or as graphics.
 -}
-printWinners :: [Player]-> Suit -> String/Graphics
-printWinners = undefined
+--printWinners :: [Player]-> Suit -> String/Graphics
+printWinners t = putStrLn (t)
 
 {-	newCard d
 	PURPOSE: Draws one card from the deck, checks the suit and moves the same suit Ace.
 	POST: Winner suit  
 -}
-newCard :: [Card] -> Suit
-newCard = undefined
+--newCard :: [Card] -> Suit
+newCard ((x,v):xs) q w e r
+    | q==8 = printWinners ("Hearts has won!")
+    | w==8 = printWinners ("Diamonds has won!")
+    | e==8 = printWinners ("Spades has won!")
+    | r==8 = printWinners ("Clubs has won!")
+	| x == Hearts = newCard xs (q+1) w e r        {- --$ createBoard (q+1) w e r -}
+	| x == Diamonds = newCard xs q (w+1) e r       {- --$ createBoard q (w+1) e r  -}
+	| x == Spades = newCard xs q w (e+1) r        {- --$ createBoard q w (e+1) r  -}
+	| x == Clubs = newCard xs q w e (r+1)     {- --$ createBoard q w e (r+1)-}
+	| otherwise = newCard xs q w e r
 
 playAgain :: userinput -> Bool
 playAgain = undefined
