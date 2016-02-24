@@ -97,8 +97,30 @@ inputPlayerNames (x:xs) ls = inputPlayerNames xs (ls ++ [(x,0,None)])
 {-	placeBets p
 	POST: List modified so Player now has a number and a suit which represents the bet.
 
+
+-Alternativ placeBets för klunkar
+pre: List of players (true)
+examples:
+placeBets [("Kalle",0,None),("Gurle",0,None)]
+Player 1, how many klunks?
+3
+Player 2, how many klunks?
+5
+[("Kalle",3,None),("Gurle",5,None)]
 -}
 
+placeBets :: [Player] -> IO [Player]
+placeBets plist = do 
+ bets <- forM [1..(length plist)] (\p -> do
+  putStrLn ("Player " ++ (show p) ++ ", how many klunks?")
+  klunks <- getLine
+  return (read klunks :: Int))
+ return (placeBets' plist [] bets)
+
+placeBets' [] save [] = save
+placeBets' ((p,b,s):pl) save (x:xs) = placeBets' pl (save ++ [(p,x,None)]) xs
+
+{-
 placeBets :: [Player] -> [Player]
 placeBets pl = placeBets' pl []
 	where 
@@ -114,7 +136,7 @@ readBet = do
     ((\_ -> do   -- exception handler
        putStrLn "Invalid input. Correct format: amount"
        readBet) :: SomeException -> IO Int)
-
+-}
 readSuit :: IO String
 readSuit = undefined
 
