@@ -114,12 +114,20 @@ placeBets plist = do
  bets <- forM [1..(length plist)] (\p -> do
   putStrLn ("Player " ++ (show p) ++ ", how many klunks?")
   klunks <- getLine
-  return (read klunks :: Int))
+  putStrLn ("Which suit? c for Clubs, d for Diamonds, h for Hearts, s for Spades")
+  bet <- getLine
+  return ((read klunks :: Int),(returnSuit bet)))
  return (placeBets' plist [] bets)
 
 placeBets' [] save [] = save
-placeBets' ((p,b,s):pl) save (x:xs) = placeBets' pl (save ++ [(p,x,None)]) xs
+placeBets' ((p,b,s):pl) save ((x,y):xs) = placeBets' pl (save ++ [(p,x,y)]) xs
 
+returnSuit bet
+ | bet == "c" = Clove
+ | bet == "d" = Diamond
+ | bet == "h" = Heart
+ | bet == "s" = Spade
+ | otherwise = None
 {-
 placeBets :: [Player] -> [Player]
 placeBets pl = placeBets' pl []
@@ -221,18 +229,30 @@ newCard ((x,v):xs) q w e r
 	| x == Clubs = newCard xs q w e (r+1)     {- --$ createBoard q w e (r+1)-}
 	| otherwise = newCard xs q w e r
 
-playAgain :: userinput -> Bool
-playAgain = undefined
+--playAgain :: userinput -> Bool
+--playAgain = undefined
 
 
-playGame :: ?? 
-players = createPlayers
-while?? sålängemanvillspela
-	deck = shuffle createDeck
-	placeBets players
-	createBoard deck 
-	printWinners players (newCard deck) 
-	playAgain
+main = do
+ putStrLn "HorseRace, by Anton, Axel & David"
+ players <- createPlayers
+ playGame players
+
+playGame players = do
+	playerbets <- placeBets players
+	return playerbets
+	newCard createDeck 0 0 0 0 -- Add shuffle
+	putStrLn "Do you want to play again?"
+	a <- getLine
+	if a == "yes" then do
+		putStrLn "With the same players?"
+		b <- getLine
+		if b == "yes" then playGame players else main
+	else putStrLn "Okay, bye!"
+	return ()
+	--createBoard deck 
+	--printWinners players (newCard deck) 
+	--playAgain
 
 
 --}
