@@ -152,8 +152,8 @@ readSuit = undefined
 	POST: 7 face down cards on the side and all aces represents the different suits
 
 -}
-createBoard :: [Card] -> String/Graphics -- här väljer vi om vi ska köra i konsolen eller om vi ska ha ngt grafiskt
-createBoard q w e r = do
+--createBoard :: [Card] -> String/Graphics -- här väljer vi om vi ska köra i konsolen eller om vi ska ha ngt grafiskt
+createBoard ((x,v):xs) q w e r p = do
 	putStrLn "_______"
 	putStrLn (line1 q)
 	putStrLn (line2 w)
@@ -218,16 +218,30 @@ printWinners t = putStrLn (t)
 	POST: Winner suit  
 -}
 --newCard :: [Card] -> Suit
-newCard ((x,v):xs) q w e r
+newCard ((x,v):xs) q w e r p
     | q==8 = printWinners ("Hearts has won!")
     | w==8 = printWinners ("Diamonds has won!")
     | e==8 = printWinners ("Spades has won!")
     | r==8 = printWinners ("Clubs has won!")
-	| x == Hearts = newCard xs (q+1) w e r        {- --$ createBoard (q+1) w e r -}
-	| x == Diamonds = newCard xs q (w+1) e r       {- --$ createBoard q (w+1) e r  -}
-	| x == Spades = newCard xs q w (e+1) r        {- --$ createBoard q w (e+1) r  -}
-	| x == Clubs = newCard xs q w e (r+1)     {- --$ createBoard q w e (r+1)-}
-	| otherwise = newCard xs q w e r
+    | q >= 1 && w >= 1 && e >= 1 && r >= 1 && p==0 = newCardMinus ((x,v):xs) q w e r (p+1)
+    | q >= 2 && w >= 2 && e >= 2 && r >= 2 && p==1 = newCardMinus ((x,v):xs) q w e r (p+1)
+    | q >= 3 && w >= 3 && e >= 3 && r >= 3 && p==2 = newCardMinus ((x,v):xs) q w e r (p+1)
+    | q >= 4 && w >= 4 && e >= 4 && r >= 4 && p==3 = newCardMinus ((x,v):xs) q w e r (p+1)
+    | q >= 5 && w >= 5 && e >= 5 && r >= 5 && p==4 = newCardMinus ((x,v):xs) q w e r (p+1)
+    | q >= 6 && w >= 6 && e >= 6 && r >= 6 && p==5 = newCardMinus ((x,v):xs) q w e r (p+1)
+    | q >= 7 && w >= 7 && e >= 7 && r >= 7 && p==6 = newCardMinus ((x,v):xs) q w e r (p+1)
+	| x == Heart = createBoard xs (q+1) w e r p 
+	| x == Diamond = createBoard xs q (w+1) e r p  
+	| x == Spade = createBoard xs q w (e+1) r p  
+	| x == Clove = createBoard xs q w e (r+1) p
+	| otherwise = createBoard xs q w e r p
+
+newCardMinus ((x,v):xs) q w e r p
+	| x == Heart = createBoard xs (q-1) w e r p 
+	| x == Diamond = createBoard xs q (w-1) e r p  
+	| x == Spade = createBoard xs q w (e-1) r p  
+	| x == Clove = createBoard xs q w e (r-1) p
+	| otherwise = createBoard xs q w e r p
 
 --playAgain :: userinput -> Bool
 --playAgain = undefined
