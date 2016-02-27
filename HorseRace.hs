@@ -163,6 +163,7 @@ createBoard ((x,v):xs) q w e r p = do
 	putStrLn "_______"
 
 line1 q 
+	| q==(-1) = line1 0
 	| q==0 = "│H"
 	| q==1 = "│ H"
 	| q==2 = "│  H"
@@ -174,6 +175,7 @@ line1 q
 	| otherwise = "|H"
 
 line2 w 
+	| w==(-1) = line2 0
 	| w==0 = "│D"
 	| w==1 = "│ D"
 	| w==2 = "│  D"
@@ -185,6 +187,7 @@ line2 w
 	| otherwise = "|D"
 
 line3 e 
+	| e==(-1) = line3 0
 	| e==0 = "│S"
 	| e==1 = "│ S"
 	| e==2 = "│  S"
@@ -196,6 +199,7 @@ line3 e
 	| otherwise = "|S"
 
 line4 r 
+	| r==(-1) = line4 0
 	| r==0 = "│C"
 	| r==1 = "│ C"
 	| r==2 = "│  C"
@@ -205,6 +209,7 @@ line4 r
 	| r==6 = "│      C"
 	| r==7 = "│       C"
 	| otherwise = "|C"
+
 
 {-	printWinners players suit
 	PURPOSE: Checks which players that betted on the right suit and prints them as winners.
