@@ -251,7 +251,7 @@ printWinners1 :: [Player] -> Suit -> String
 printWinners1 pl s = printWinners1' pl s ""
 	where 
 		printWinners1' [] s winners = "The winners are: " ++ winners
-		printWinners1' ((p,b,s1):pl) s winners | s1 == s = printWinners1' pl s (winners ++ p ++" with " ++ show (b*2)++" klunks, ") 
+		printWinners1' ((p,b,s1):pl) s winners | s1 == s = printWinners1' pl s (winners ++ p ++" with " ++ show (b*2)++" sips, ") 
 											   | otherwise = printWinners1' pl s winners
 
 
