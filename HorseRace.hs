@@ -247,12 +247,13 @@ horseRace ((x,v):xs) gamestate = do
 	putStrLn ("The card was: " ++ (translateValue v)  ++ " of "  ++ (translateSuit x))
  	horseRace xs (newCard ((x,v):xs) gamestate)
 
-printWinners1 :: [Player] -> Suit -> String
-printWinners1 pl s = printWinners1' pl s ""
+
+showWinners :: [Player] -> Suit -> String
+showWinners pl s = showWinners' pl s ""
 	where 
-		printWinners1' [] s winners = "The winners are: " ++ winners
-		printWinners1' ((p,b,s1):pl) s winners | s1 == s = printWinners1' pl s (winners ++ p ++" with " ++ show (b*2)++" sips, ") 
-											   | otherwise = printWinners1' pl s winners
+		showWinners' [] s winners = "The winners are: " ++ winners
+		showWinners' ((p,b,s1):pl) s winners | s1 == s = showWinners' pl s (winners ++ p ++" with " ++ show (b*2)++" sips, ") 
+											   | otherwise = showWinners' pl s winners
 
 
 main = do
@@ -265,7 +266,7 @@ playGame players = do
 	playerbets <- placeBets players
 	thedeck <- shuffle createDeck
 	win <- horseRace thedeck newgame
-	putStrLn (printWinners1 playerbets win)
+	putStrLn (showWinners playerbets win)
 	putStrLn "Do you want to play again?"
 	a <- getLine
 	if a == "yes" then do
@@ -274,3 +275,4 @@ playGame players = do
 		if b == "yes" then playGame players else main
 	else putStrLn "Okay, bye!"
 	return ()
+
