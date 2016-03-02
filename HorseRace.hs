@@ -30,6 +30,7 @@ type GameState = (Int,Int,Int,Int,Int)
 
 newgame = (0,0,0,0,0)
 values = [King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two]
+
 {- 	createDeck
 	s is suit, v is value and r is result
 	POST: A deck with all four suits and one card for each value in that suit.
@@ -47,11 +48,12 @@ createDeckAux (x:xs) (l:ls) v r | x == Heart = createDeckAux (x:xs) ls v ((x,l):
 createDeckAux (x:xs) [] v r | x == Spade = r
 createDeckAux (x:xs) (l:ls) v r | x == Spade = createDeckAux (x:xs) ls v ((x,l):r)
 
-
-
 {-	shuffle d
+	PURPUSE: 
+	PRE : True
 	POST: List of cards where the position of the cards has been randomized. 
 	COMMENT: copied from https://wiki.haskell.org/Random_shuffle
+	EXAMPLE: shuffle [1,2,3,4,5] -> [4,5,1,2,3]
 	-}
 shuffle :: [a] -> IO [a]
 shuffle d = do
@@ -82,7 +84,7 @@ Berra
 Player 3, please input your name
 Carro
 [("Alex",0,None),("Berra",0,None),("Carro",0,None)]
---}
+-}
 createPlayers :: IO [Player]
 createPlayers = do 
  putStrLn "How many players?"
