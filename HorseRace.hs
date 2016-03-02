@@ -18,19 +18,17 @@ data Value = King | Queen | Jack | Ten | Nine | Eight | Seven | Six | Five | Fou
 {- REPRESENTATION CONVENTION: Represents a playing card by its suit and value.
    REPRESENTATION INVARIANT:  Must contain a suit and value. There can only be unique combinations of suit and value in a deck. -}
 type Card = (Suit,Value)
-
 {- REPRESENTATION CONVENTION: The players name, bet amount and betted suit is represented in that order.
    REPRESENTATION INVARIANT: String should not be empty (no name), The Int and Suit should not be 0 & None if a bet is placed. -}
 type Player = (String,Int,Suit)
 
 {- REPRESENTATION CONVENTION: The current state of the game is represented by five integers, the first four represents the amount of
-steps that the horses have taken and the last one represents 
+steps that the horses have taken and the last one represents how far the last 
    REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ... -}
 type GameState = (Int,Int,Int,Int,Int)
 
 newgame = (0,0,0,0,0)
 values = [King, Queen, Jack, Ten, Nine, Eight, Seven, Six, Five, Four, Three, Two]
-
 {- 	createDeck
 	s is suit, v is value and r is result
 	POST: A deck with all four suits and one card for each value in that suit.
@@ -48,13 +46,34 @@ createDeckAux (x:xs) (l:ls) v r | x == Heart = createDeckAux (x:xs) ls v ((x,l):
 createDeckAux (x:xs) [] v r | x == Spade = r
 createDeckAux (x:xs) (l:ls) v r | x == Spade = createDeckAux (x:xs) ls v ((x,l):r)
 
+
 {-	shuffle d
-	PURPUSE: 
-	PRE : True
 	POST: List of cards where the position of the cards has been randomized. 
 	COMMENT: copied from https://wiki.haskell.org/Random_shuffle
-	EXAMPLE: shuffle [1,2,3,4,5] -> [4,5,1,2,3]
 	-}
+
+translateSuit :: Suit -> String
+translateSuit s
+  | s == Spade = "Spades"
+  | s == Heart = "Hearts"
+  | s == Diamond = "Diamonds"
+  | otherwise = "Clubs"
+
+translateValue :: Value -> String
+translateValue v
+  | v == King = "King"
+  | v == Queen = "Queen"
+  | v == Jack = "Jack"
+  | v == Ten = "Ten"
+  | v == Nine = "Nine"
+  | v == Eight = "Eight"
+  | v == Seven = "Seven"
+  | v == Six = "Six"
+  | v == Five = "Five"
+  | v == Four = "Four"
+  | v == Three = "Three"
+  | otherwise = "Two"
+
 shuffle :: [a] -> IO [a]
 shuffle d = do
         ar <- newArray n d
@@ -84,7 +103,7 @@ Berra
 Player 3, please input your name
 Carro
 [("Alex",0,None),("Berra",0,None),("Carro",0,None)]
--}
+--}
 createPlayers :: IO [Player]
 createPlayers = do 
  putStrLn "How many players?"
@@ -235,7 +254,7 @@ horseRace ((x,v):xs) gamestate = do
 	t <- (createBoard gamestate)
 	putStrLn "Press any button to draw the next card."
 	k <- getLine
-	putStrLn ("The card was: " ++ (show v)  ++ " of "  ++ (show x))
+	putStrLn ("The card was: " ++ (translateValue v)  ++ " of "  ++ (translateSuit x))
  	horseRace xs (newCard ((x,v):xs) gamestate)
 
 
@@ -246,13 +265,13 @@ showWinners pl s = showWinners' pl s ""
 		showWinners' ((p,b,s1):pl) s winners | s1 == s = showWinners' pl s (winners ++ p ++" with " ++ show (b*2)++" sips, ") 
 											   | otherwise = showWinners' pl s winners
 
-
+main :: IO ()
 main = do
  putStrLn "HorseRace, by Anton, Axel & David"
  players <- createPlayers
  playGame players
 
-
+playGame :: [Player] -> IO ()
 playGame players = do
 	playerbets <- placeBets players
 	thedeck <- shuffle createDeck
