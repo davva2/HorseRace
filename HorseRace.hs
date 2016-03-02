@@ -5,16 +5,26 @@ Anton Eklund, Axel Nygårds, David Smeds
 import System.Random
 import Data.Array.IO
 import Control.Monad
-import Prelude hiding(catch)
 import Control.Exception
 
+{- REPRESENTATION CONVENTION: Represents a playing card's suit if it isn't None. 
+   REPRESENTATION INVARIANT: A suit is only None if a player has no bet placed. -}
 data Suit = None | Spade | Heart | Club | Diamond deriving(Show,Eq)
+
+{- REPRESENTATION CONVENTION: Represents a playing card's value. Does not contain aces as the game uses them as horses.
+   REPRESENTATION INVARIANT: -}
 data Value = King | Queen | Jack | Ten | Nine | Eight | Seven | Six | Five | Four | Three | Two deriving(Show,Eq)
 
+{- REPRESENTATION CONVENTION: Represents a playing card by its suit and value.
+   REPRESENTATION INVARIANT:  Must contain a suit and value. There can only be unique combinations of suit and value in a deck. -}
 type Card = (Suit,Value)
-
+{- REPRESENTATION CONVENTION: The players name, bet amount and betted suit is represented in that order.
+   REPRESENTATION INVARIANT: String should not be empty (no name), The Int and Suit should not be 0 & None if a bet is placed. -}
 type Player = (String,Int,Suit)
 
+{- REPRESENTATION CONVENTION: The current state of the game is represented by five integers, the first four represents the amount of
+steps that the horses have taken and the last one represents 
+   REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ... -}
 type GameState = (Int,Int,Int,Int,Int)
 
 newgame = (0,0,0,0,0)
